@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+{% for meeting in object_list %}
+<p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
+{% endfor %}
+
+
+</body>
+</html>

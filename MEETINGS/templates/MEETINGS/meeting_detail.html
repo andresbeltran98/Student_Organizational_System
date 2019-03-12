@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>{{ object.title }}</h1>
+<p>University: {{ object.university }}</p>
+<p>Course: {{ object.course }}</p>
+<p>Date: {{ object.date }}</p>
+<p>Location: {{ object.location }}</p>
+<p>Description: {{ object.description }}</p>
+
+<p><h3>Members:</h3><p>
+{% for member in object.members.all %}
+    <p>{{ member.username }}</p>
+{% endfor %}
+</body>
+</html>
