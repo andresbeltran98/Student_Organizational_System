@@ -1,19 +1,23 @@
-from django.shortcuts import render
+import datetime
+from django.shortcuts import render, redirect
+from .models import Meeting, Membership
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django import forms
 from django.views.generic import (
     ListView,
     DetailView,
-    CreateView
+    CreateView,
+    UpdateView,
+    DeleteView
 )
 
-from .models import Meeting, Membership
-import datetime
-from django.contrib.auth.models import User
 
-
-def create_membership(request, meeting):
-    m1 = Membership(person=User.objects.first(), group=meeting,
-                    date_joined=datetime.datetime.now().date(), is_organizer=True)
-    # use request.user in person=
+def create_membership(request, meeting, organizer):
+    m1 = Membership(person=request.user, group=meeting,
+                    date_joined=datetime.datetime.now().date(), is_organizer=organizer)
     m1.save()
 
 
@@ -24,18 +28,84 @@ class MeetingCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
-        create_membership(self.request, self.object)
+        create_membership(self.request, self.object, True)
         return super().form_valid(form)
 
 
-class MeetingListView(ListView):
-    queryset = User.objects.first().user_meetings.all()
+class MeetingListView(LoginRequiredMixin, ListView):
     template_name = 'MEETINGS/meeting_list.html'
 
+    def get_queryset(self):
+        return self.request.user.user_meetings.all()
 
-class MeetingDetailView(DetailView):
+
+class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
     model = Meeting
     template_name = 'MEETINGS/meeting_detail.html'
+    form_class = forms.Form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        is_member = False
+        is_organizer = False
+
+        try:
+            self.object.members.get(username=self.request.user.username)
+            is_member = True
+            membership = Membership.objects.get(group=self.get_object(), person=self.request.user)
+            is_organizer = membership.is_organizer
+        except ObjectDoesNotExist:
+            print("Member not in meeting")
+
+        context['is_member'] = is_member
+        context['is_organizer'] = is_organizer
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        meeting = self.get_object()
+        if request.POST.get('join_meeting'):
+            create_membership(request, meeting, False)
+            return redirect(meeting.get_absolute_url())
+
+        if request.POST.get('leave_meeting'):
+            membership = Membership.objects.get(group=meeting, person=request.user)
+            membership.delete()
+            return redirect(meeting.get_absolute_url())
+
+
+class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Meeting
+    fields = ['title', 'university', 'course', 'date', 'location', 'description']
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def test_func(self):
+        membership = Membership.objects.get(group=self.get_object(), person=self.request.user)
+        if membership.is_organizer:
+            return True
+        return False
+
+
+class MeetingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Meeting
+    success_url = '/mf/'
+
+    def test_func(self):
+        membership = Membership.objects.get(group=self.get_object(), person=self.request.user)
+        if membership.is_organizer:
+            return True
+        return False
+
+
+
+
+
+
+
+
 
 
 
