@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django import forms
+from django.db.models import Q
 from django.views.generic import (
     ListView,
     DetailView,
@@ -100,12 +101,12 @@ class MeetingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
+class SearchListView(LoginRequiredMixin, ListView):
+    template_name = 'MEETINGS/search_list.html'
 
-
-
-
-
-
-
-
-
+    def get_queryset(self):
+        query = self.request.GET.get('myquery')
+        results = None
+        if query is not None:
+            results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        return results

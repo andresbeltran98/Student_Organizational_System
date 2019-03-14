@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<form method="GET">
+    <input name="myquery" placeholder="Search meeting...">
+    <button class="btn btn-success" type="submit">Search</button>
+
+</form>
+
+{% for meeting in object_list %}
+<p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
+{% endfor %}
+
+
+</body>
+</html>

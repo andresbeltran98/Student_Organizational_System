@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='MEETINGS',
+            name='Meeting',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=100)),
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_joined', models.DateField()),
-                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='MEETINGS.MEETINGS')),
+                ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='MEETINGS.Meeting')),
                 ('person', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
