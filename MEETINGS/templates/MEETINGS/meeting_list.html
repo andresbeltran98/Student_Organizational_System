@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Title</title>
-</head>
-<body>
+{% extends "USERS/base.html" %}
+{% block content %}
 
-{% for meeting in object_list %}
-<p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
-{% endfor %}
+    <h1>My Meetings</h1>
+
+   {% for meeting in object_list %}
+    <p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
+    {% endfor %}
 
 
-</body>
-</html>
+{% endblock content %}

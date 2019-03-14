@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Meeting Form</title>
-</head>
-<body>
+{% extends "USERS/base.html" %}
+{% block content %}
 
+<h1>Start a Study Session!</h1>
 
-<form method="POST">
+    <form method="POST">
     {% csrf_token %} <!-- Security feature -->
     {{ form.as_p }}
-<input type="Submit" value="Save" />
-</form>
+        <input type="Submit" value="Save" />
+    </form>
 
 
-
-</body>
-</html>
+{% endblock content %}
