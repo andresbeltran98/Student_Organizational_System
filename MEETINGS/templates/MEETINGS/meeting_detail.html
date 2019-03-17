@@ -1,6 +1,15 @@
 {% extends "USERS/base.html" %}
 {% block content %}
 
+<!--MESSAGES-->
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <h1>{{ object.title }}</h1>
 <p>University: {{ object.university }}</p>
 <p>Course: {{ object.course }}</p>
@@ -29,6 +38,11 @@
     <p>{{ member.username }}</p>
 {% endfor %}
 
+<!-- INVITE PEOPLE -->
+<form method="POST">
+    {% csrf_token %}
+    <input type="Submit" value="Share Meeting!" name="share_meeting"/>
+</form>
 
 <!--UPDATE/DELETE -->
 

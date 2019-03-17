@@ -1,5 +1,8 @@
 import datetime
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.conf import settings
 from .models import Meeting, Membership
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,6 +10,7 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django import forms
 from django.db.models import Q
+from .forms.share_form import ShareForm
 from django.views.generic import (
     ListView,
     DetailView,
@@ -20,6 +24,18 @@ def create_membership(request, meeting, organizer):
     m1 = Membership(person=request.user, group=meeting,
                     date_joined=datetime.datetime.now().date(), is_organizer=organizer)
     m1.save()
+
+def send_invitations(recipients_list, username, meeting_name, link_meeting):
+    subject = "Invitation to a Study Session"
+    message = "{} has invited you to the study session \"{}\"\n" \
+              "The link to the meeting is: http://127.0.0.1:8000{}".format(username, meeting_name, link_meeting)
+    from_email = settings.EMAIL_HOST_USER
+    recipients = recipients_list
+    send_mail(subject=subject,
+              from_email=from_email,
+              recipient_list=recipients,
+              message=message,
+              fail_silently=False)
 
 
 class MeetingCreateView(CreateView):
@@ -44,6 +60,8 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
     model = Meeting
     template_name = 'MEETINGS/meeting_detail.html'
     form_class = forms.Form
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,6 +91,28 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
             membership = Membership.objects.get(group=meeting, person=request.user)
             membership.delete()
             return redirect(meeting.get_absolute_url())
+
+        if request.POST.get('share_meeting'):
+            share_form = ShareForm()
+            context = {
+                'form' : share_form
+            }
+            return render(request, 'MEETINGS/share_meeting.html', context)
+
+        if request.POST.get('send_invitations'):
+            share_form = ShareForm(request.POST)
+            if share_form.is_valid():
+                recipients = share_form.clean()['emails']
+                messages.success(request, "The invitations were sent successfully!")
+                send_invitations(recipients, request.user.username, meeting.title, meeting.get_absolute_url())
+                return redirect(meeting.get_absolute_url())
+            else:
+                share_form = ShareForm()
+                context = {
+                    'form': share_form
+                }
+                messages.error(request, "Invalid email(s)")
+                return render(request, 'MEETINGS/share_meeting.html', context)
 
 
 class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
