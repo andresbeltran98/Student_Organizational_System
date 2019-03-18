@@ -38,7 +38,7 @@ def send_invitations(recipients_list, username, meeting_name, link_meeting):
               fail_silently=False)
 
 
-class MeetingCreateView(CreateView):
+class MeetingCreateView(LoginRequiredMixin, CreateView):
     model = Meeting
     fields = ['title', 'university', 'course', 'date', 'location', 'description']
 

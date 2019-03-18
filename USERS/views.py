@@ -5,10 +5,6 @@ from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
 
 
-def home(request):
-    return render(request, 'MEETINGS/home.html')
-
-
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)

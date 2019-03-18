@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
      <!-- Required meta tags -->
@@ -59,13 +59,12 @@
                     <a class="nav-link" href="{% url 'meeting-search' %}">Search Meeting</a>
                 </li>
             </ul>
-            <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle mr-sm-0" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <a class="nav-link dropdown-toggle mr-sm-15" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
                 </div>
             </li>
 
