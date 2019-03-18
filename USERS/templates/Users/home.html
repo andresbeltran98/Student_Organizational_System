@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Home!</h1>
-</body>
-</html>
+{% extends "USERS/base.html" %}
+{% block content %}
+<h1>This is the default home page for now. Updating soon!</h1>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            <a class="ml-2" href="{% url 'register' %}">This is a test link</a>
+        </small>
+    </div>
+{% endblock %}
