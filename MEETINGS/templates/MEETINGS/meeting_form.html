@@ -1,0 +1,13 @@
+{% extends "USERS/base.html" %}
+{% block content %}
+
+<h1>Start a Study Session!</h1>
+
+    <form method="POST">
+    {% csrf_token %} <!-- Security feature -->
+    {{ form.as_p }}
+        <input type="Submit" value="Save" />
+    </form>
+
+
+{% endblock content %}

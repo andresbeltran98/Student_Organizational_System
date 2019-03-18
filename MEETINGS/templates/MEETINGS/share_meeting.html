@@ -1,0 +1,21 @@
+{% extends "USERS/base.html" %}
+{% block content %}
+
+<!--MESSAGES-->
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p><h3>Please enter email addresses (separated by commas)</h3></p>
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <p><input name="send_invitations" type="submit" value="Share!"></p>
+</form>
+
+
+{% endblock content %}

@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm
 
 
+
 def home(request):
     return render(request, 'USERS/home.html')
 

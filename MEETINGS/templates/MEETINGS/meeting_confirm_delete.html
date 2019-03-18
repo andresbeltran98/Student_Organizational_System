@@ -1,0 +1,12 @@
+{% extends "USERS/base.html" %}
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    <p><h2>Are you sure you want to delete the Meeting: "{{ object.title }}"?</h2></p>
+    <button class="btn btn-outline-danger" type="Submit">Yes, Delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'meeting-detail' object.id %}">Cancel</a>
+</form>
+
+
+{% endblock content %}

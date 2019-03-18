@@ -1,0 +1,14 @@
+{% extends "USERS/base.html" %}
+{% block content %}
+
+    <form method="GET">
+        <input name="myquery" placeholder="Search meeting...">
+        <button class="btn btn-success" type="submit">Search</button>
+    </form>
+
+{% for meeting in object_list %}
+<p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
+{% endfor %}
+
+
+{% endblock content %}
