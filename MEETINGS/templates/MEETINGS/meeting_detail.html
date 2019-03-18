@@ -5,17 +5,37 @@
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
 
 <h1>{{ object.title }}</h1>
+
+<!--IF ORGANIZER: UPDATE/DELETE -->
+{% if is_organizer == True %}
+<a class="btn" href="{% url 'meeting-update' object.id %}">Update</a>
+<a class="btn" href="{% url 'meeting-delete' object.id %}">Delete Meeting</a>
+{% endif %}
+
 <p>University: {{ object.university }}</p>
 <p>Course: {{ object.course }}</p>
 <p>Date: {{ object.date }}</p>
 <p>Location: {{ object.location }}</p>
 <p>Description: {{ object.description }}</p>
+
+<!--DISPLAY MEMBERS -->
+<p><h3>Members:</h3><p>
+{% for member in object.members.all %}
+    <p>{{ member.username }}</p>
+{% endfor %}
+
+
+<!-- INVITE PEOPLE -->
+<form method="POST">
+    {% csrf_token %}
+    <p><input type="Submit" value="Share Meeting!" name="share_meeting"/></p>
+</form>
 
 <!--JOIN/LEAVE BUTTONS -->
 {% if is_member == False %}
@@ -30,25 +50,6 @@
     <input type="Submit" value="Leave Meeting" name="leave_meeting"/>
 </form>
 
-{% endif %}
-
-<!--DISPLAY MEMBERS -->
-<p><h3>Members:</h3><p>
-{% for member in object.members.all %}
-    <p>{{ member.username }}</p>
-{% endfor %}
-
-<!-- INVITE PEOPLE -->
-<form method="POST">
-    {% csrf_token %}
-    <input type="Submit" value="Share Meeting!" name="share_meeting"/>
-</form>
-
-<!--UPDATE/DELETE -->
-
-{% if is_organizer == True %}
-<a class="btn" href="{% url 'meeting-update' object.id %}">Update</a>
-<p><a class="btn" href="{% url 'meeting-delete' object.id %}">Delete Meeting</a></p>
 {% endif %}
 
 
