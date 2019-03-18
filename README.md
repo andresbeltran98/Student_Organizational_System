@@ -22,7 +22,7 @@ Bootstrap for Front End
 
 ## Authors
 
-* **Ryan Tatton** - *Backend Development Engineer* - [GitHub](https://github.com/andresbeltran98)
+* **Andres Beltran** - *Backend Development Engineer* - [GitHub](https://github.com/andresbeltran98)
 * **Thomas Patton** - *Backend Development Engineer* - [GitHub](https://github.com/thomaspttn)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
