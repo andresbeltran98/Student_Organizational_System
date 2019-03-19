@@ -1,11 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import EMPTY_VALUES, validate_email, ValidationError
-from django.forms.fields import Field
+from django.forms.fields import CharField
 
 
-class CommaSeparatedEmailField(Field):
-    description = _(u"E-mail address(es)")
+class CommaSeparatedEmailField(CharField):
 
     def __init__(self, *args, **kwargs):
         self.token = kwargs.pop("token", ",")
@@ -36,7 +35,10 @@ class CommaSeparatedEmailField(Field):
 
 
 class ShareForm(forms.Form):
-    emails = CommaSeparatedEmailField()
+    emails = CommaSeparatedEmailField(
+     widget=forms.Textarea(attrs={'placeholder': 'E-mail address(es)'}),
+     label=_(u'')
+    )
 
 
 

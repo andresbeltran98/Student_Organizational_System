@@ -1,11 +1,12 @@
 {% extends "USERS/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 
 <h1>Start a Study Session!</h1>
 
     <form method="POST">
     {% csrf_token %} <!-- Security feature -->
-    {{ form.as_p }}
+    {{ form|crispy }}
         <input type="Submit" value="Save" />
     </form>
 

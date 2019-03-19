@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
@@ -38,7 +38,7 @@ def send_invitations(recipients_list, username, meeting_name, link_meeting):
               fail_silently=False)
 
 
-class MeetingCreateView(CreateView):
+class MeetingCreateView(LoginRequiredMixin, CreateView):
     model = Meeting
     fields = ['title', 'university', 'course', 'date', 'location', 'description']
 
@@ -132,7 +132,9 @@ class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class MeetingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Meeting
-    success_url = '/mf/'
+
+    def get_success_url(self):
+        return reverse('meetings-list')
 
     def test_func(self):
         membership = Membership.objects.get(group=self.get_object(), person=self.request.user)
