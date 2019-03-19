@@ -1,4 +1,4 @@
-# Student_Organizational_System
+# Student Organizational System
 
 This is the source code for the Student Organizational System, a project by Thomas Patton and Andres Beltran for EECS 393 The goal of the project is to create a system for students in a university to meet for classes.
 
@@ -33,4 +33,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Anyone who helped us
+* Corey Shafer, for making learning the Django proccess all the easier
