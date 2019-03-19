@@ -9,7 +9,7 @@ class MeetingTestModel(TestCase):
     def setUp(self):
         self.title = 'MyMeeting'
         self.course = 'EECS 383'
-        self.date_now = datetime.datetime.now()
+        self.date_now = datetime.datetime.strptime('2019-3-19', "%Y-%m-%d").date()
         self.location = 'Sears'
         self.description = 'Demo Session'
 
