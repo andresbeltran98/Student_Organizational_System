@@ -9,37 +9,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-
-    <link href="{% static 'USERS/main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'USERS/main.css' %}">
 
     <title>Student Organizational System</title>
 </head>
 <body>
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
 
     <!-- NAV BAR-->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -80,11 +54,18 @@
 
     <!--MAIN-->
     <main role="main" class="container">
-
-      <div class="starter-template">
-        {% block content %}{% endblock %}
+      <div class="row">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% block content %}{% endblock %}
+        </div>
       </div>
-
     </main>
 
     <!-- Optional JavaScript -->
