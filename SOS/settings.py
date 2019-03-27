@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'MEETINGS.apps.MeetingsConfig',
     'USERS.apps.UsersConfig',
+    'CALENDAR.apps.CalendarConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -116,9 +117,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_INPUT_FORMATS = ['%Y-%m-%dT%H:%M']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+
 
 STATIC_URL = '/static/'
 

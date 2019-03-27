@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import path, include
+from django.conf.urls import url
 from .views import (MeetingListView, MeetingDetailView, MeetingCreateView,
                     MeetingUpdateView, MeetingDeleteView, SearchListView)
-from . import views
 
 urlpatterns = [
     path('', MeetingListView.as_view(), name='meetings-list'),
