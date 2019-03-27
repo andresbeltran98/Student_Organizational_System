@@ -8,13 +8,19 @@ class Meeting(models.Model):
     title = models.CharField(max_length=100)
     university = models.CharField(max_length=100)
     course = models.CharField(max_length=100)
-    date = models.DateTimeField()
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField()
     location = models.CharField(max_length=100)
     description = models.TextField()
     members = models.ManyToManyField(User, through='Membership', related_name='user_meetings', default=None)
 
     def __str__(self):
         return self.title
+
+    @property
+    def get_html_url(self):
+        url = reverse('meeting-detail', kwargs={'pk': self.pk})
+        return f'<a href="{url}"> {self.title} </a>'
 
     def get_absolute_url(self):
         # returns the path as a string
