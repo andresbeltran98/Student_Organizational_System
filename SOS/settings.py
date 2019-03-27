@@ -125,6 +125,10 @@ DATE_INPUT_FORMATS = ['%Y-%m-%dT%H:%M']
 
 STATIC_URL = '/static/'
 
+# For pictures
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'meetings-list'
