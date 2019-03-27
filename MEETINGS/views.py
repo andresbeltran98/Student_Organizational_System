@@ -25,6 +25,7 @@ def create_membership(request, meeting, organizer):
                     date_joined=datetime.datetime.now().date(), is_organizer=organizer)
     m1.save()
 
+
 def send_invitations(recipients_list, username, meeting_name, link_meeting):
     subject = "Invitation to a Study Session"
     message = "{} has invited you to the study session \"{}\"\n" \
@@ -40,7 +41,7 @@ def send_invitations(recipients_list, username, meeting_name, link_meeting):
 
 class MeetingCreateView(LoginRequiredMixin, CreateView):
     model = Meeting
-    fields = ['title', 'university', 'course', 'date', 'location', 'description']
+    fields = ['title', 'university', 'course', 'date_start', 'date_end', 'location', 'description']
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
