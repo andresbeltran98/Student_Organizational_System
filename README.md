@@ -1,36 +1,48 @@
-# Student_Organizational_System
+# Student Organizational System
 
-This is the source code for the Student Organizational System, a project by Thomas Patton and Andres Beltran for EECS 393 The goal of the project is to create a system for students in a university to meet for classes.
+This is the source code for the Student Organizational System, a project by Thomas Patton and Andres Beltran for EECS 393. The goal of the project is to create a system for students in a university to meet for classes.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
+Your computer will need to have Python. A good explanation of how to do this is available on the [Python Website](python.org).
 
-Your computer will need to have Python and Django installed. A good explanation of how to do this is available on the [Python Website](python.org)
+From there, you will need to install a few packages. To handle the website framework, you will need to download Django.
+
+```
+$ pip install Django
+```
+
+To handle the form tags used, install crispy-forms
+
+```
+$ pip install --upgrade django-crispy-forms
+```
+
+And lastly to handle the images, you will need Pillow
+
+```
+$ pip install Pillow
+```
 
 ## Documentation
 
-See the Wiki files in the repository for a more in depth look at the roadmap of the project and the most recent documentation.
+See the Wiki files in the repository for a more in depth look at the roadmap of the project and the most recent documentation. This includes our Software Requirements Specification, Testing Documents, and our Design Document.
 
 ## Built With
 
-Python 3.6 with Django for Back End
+Our application is primarily built with Python 3.6 using the Django Framework. For the frontend, we used a combination of HTML, CSS, Javascript, and Bootstrap.
 
-Bootstrap for Front End
+The program was primarily developed in PyCharm, with the assistance of Git.
 
 ## Authors
 
 * **Andres Beltran** - *Backend Development Engineer* - [GitHub](https://github.com/andresbeltran98)
 * **Thomas Patton** - *Backend Development Engineer* - [GitHub](https://github.com/thomaspttn)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+A thanks is also due to Corey Shafer, for his instructional guides on learning the Django framework.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Anyone who helped us
