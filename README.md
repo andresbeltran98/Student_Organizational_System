@@ -1,6 +1,6 @@
 # Student Organizational System
 
-This is the source code for the Student Organizational System, a project by Thomas Patton and Andres Beltran for EECS 393. The goal of the project is to create a system for students in a university to meet for classes.
+This is the source code for the Student Organizational System, a project by Thomas Patton and Andres Beltran for EECS 393. The goal of the project is to create a system for students in a university to meet for classes. We found that students at university often did not have the proper resources to easily meet with classmates. As a result, we built a website with Python and Django to facilitate this. Registered users have the ability to create meetings for classes and quickly share them with their friends. For a more in-depth look at the purpose of this project, see the Software Requirements Specification document and the Design Document.
 
 ## Getting Started
 
