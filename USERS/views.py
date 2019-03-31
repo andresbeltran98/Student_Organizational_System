@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Profile
 
 
 def register(request):
@@ -19,8 +22,18 @@ def register(request):
     return render(request, 'USERS/register.html', {'form': form})
 
 
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'USERS/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+"""
 @login_required
 def profile(request):
     return render(request, 'USERS/profile.html')
+"""
 
 

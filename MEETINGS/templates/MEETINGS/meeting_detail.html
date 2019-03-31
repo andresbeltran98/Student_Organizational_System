@@ -1,56 +1,195 @@
-{% extends "USERS/base.html" %}
-{% block content %}
-
-<!--MESSAGES-->
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-<h1>{{ object.title }}</h1>
-
-<!--IF ORGANIZER: UPDATE/DELETE -->
-{% if is_organizer == True %}
-<a class="btn" href="{% url 'meeting-update' object.id %}">Update</a>
-<a class="btn" href="{% url 'meeting-delete' object.id %}">Delete Meeting</a>
-{% endif %}
-
-<p>University: {{ object.university }}</p>
-<p>Course: {{ object.course }}</p>
-<p>Date: {{ object.date }}</p>
-<p>Location: {{ object.location }}</p>
-<p>Description: {{ object.description }}</p>
-
-<!--DISPLAY MEMBERS -->
-<p><h3>Members:</h3><p>
-{% for member in object.members.all %}
-    <p>{{ member.username }}</p>
-{% endfor %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ object.title }}</title>
 
 
-<!-- INVITE PEOPLE -->
-<form method="POST">
-    {% csrf_token %}
-    <p><input type="Submit" value="Share Meeting!" name="share_meeting"/></p>
-</form>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css">
+    <link href="{% static 'MEETINGS/main.css' %}" type="text/css" rel="stylesheet">
 
-<!--JOIN/LEAVE BUTTONS -->
-{% if is_member == False %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="Submit" value="Join Meeting" name="join_meeting"/>
-</form>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-{% else %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="Submit" value="Leave Meeting" name="leave_meeting"/>
-</form>
+    <!-- Select picker -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/js/i18n/defaults-*.min.js"></script>
 
-{% endif %}
+    <!-- My files -->
+    <script type="text/javascript" src="{% static 'MEETINGS/jquery.serialize-object.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'MEETINGS/functions.js' %}"></script>
 
 
-{% endblock content %}
+
+</head>
+
+
+<body>
+
+
+
+
+<div class="container-fluid">
+    <!-- NAVIGATION -->
+    {% include "USERS/navbar.html" %}
+
+
+
+	<div class="row">
+        <!-- PICTURE COLUMN-->
+		<div class="col-md-6">
+            <img class="m_img rounded" src="{% static 'MEETINGS/meeting_default.jpg' %}"/>
+		</div>
+
+        <!--INFO COLUMN-->
+		<div class="info col-md-6">
+            <h2 class="text-info">{{ object.title }}</h2>
+            <p><h4>@ {{ object.university }}</h4></p>
+            <p>Course: {{ object.course }}</p>
+            <p>From: {{ object.date_start | date:"F d, Y, P" }}</p>
+            <p>To: {{ object.date_end }}</p>
+            <p>Location: {{ object.location }}</p>
+
+
+            <!--SHARE MEETING MODAL -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#shareModal"
+                    data-whatever="@mdo">Share Meeting</button>
+
+            <div class="share_modal modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Share Meeting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                      <p><h6>Please enter email addresses (separated by commas)</h6></p>
+                        <form class="share_ajax" method="POST" name="share_form" action="{% url 'meeting-detail' object.id %}">
+                            <div id="results"></div>
+                            {% csrf_token %}
+                            {{ form }}
+                            <input class="btn btn-primary btn-rounded my-3" name="send_invitations" type="submit" value="Share!"></p>
+                        </form>
+
+                  </div>
+
+                  <!--FOOTER <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+
+
+
+        </div>
+
+	</div>
+    <!--FINISH HEADER-->
+
+
+
+    <!--ABOUT/MEMBERS-->
+    <div class="description row">
+        <!-- ABOUT-->
+		<div class="about col-md-6">
+            <h2 class="text-info">Description</h2>
+            <br class="p_med">{{ object.description }}</br>
+		</div>
+
+        <!--MEMBERS-->
+		<div class="info col-md-6">
+            <h2 class="text-info">Members</h2>
+
+            <!--JOIN/LEAVE BUTTONS -->
+            {% if is_organizer == True %}
+            <br class="p_med"><h5>You are the organizer!</h5>
+            <div class="btn-group" role="group">
+				<a class="btn btn-secondary" href="{% url 'meeting-update' object.id %}" type="button">Update Details</a>
+                <a class="btn btn-secondary" href="{% url 'meeting-delete' object.id %}" type="button">Cancel Meeting</a>
+            </div>
+
+            <form name="leave_form" class="leave_ajax" method="POST">
+                {% csrf_token %}
+                <input class="btn btn-danger btn-sm mt-1 mb-1" type="Submit" value="Leave meeting"/>
+            </form>
+
+            <!-- If only one member, show error -->
+            <div id="leave_error" class="alert alert-danger alert-dismissible" style="display: none;">
+                <button id="close_alert" type="button" class="close" aria-label="Close">&times;</button>
+                You are the only member! Delete the meeting if you want to leave
+            </div>
+
+            <!-- If not, choose organizer -->
+            <form id="select_form" method="POST" style="display: none;">
+                <div class="alert alert-danger alert-dismissible">
+                    <button id="close_select_org" type="button" class="close" aria-label="Close">&times;</button>
+                    <h6>Assign a new organizer:</h6>
+                    {% csrf_token %}
+                    <select name="select_org" class="selectpicker" data-live-search="true">
+                        {% for member in object.members.all %}
+                            {% if member != user%}
+                                <option>{{ member.username }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input name="leave_meeting_org" class="btn btn-secondary btn-sm mt-1 mb-1" type="Submit" value="Assign and leave meeting"/>
+                </div>
+            </form>
+
+
+            {% elif is_member == False %}
+            <form method="POST">
+                {% csrf_token %}
+                <input class="btn btn-primary" type="Submit" value="Join Meeting" name="join_meeting"/>
+            </form>
+
+            {% else %}
+            <h5>You are a member!</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <input name="leave_meeting_mem" class="btn btn-danger btn-sm mt-1 mb-1" type="Submit" value="Leave Meeting"/>
+            </form>
+            {% endif %}
+
+            <!--LIST OF ATTENDEES-->
+            <br class="p_med">
+
+            {% for member in object.members.all %}
+            <div class="member_profile col-md-9">
+                <img class="rounded-circle article-img" src="{% static 'MEETINGS/meeting_default.jpg' %}">
+                <a class="mr-2" href="{% url 'profile' member.id %}">{{ member.username }}</a>
+                <small class="text-muted">Joined on {{ member.date_joined | date:"F d, Y" }}</small>
+
+            </div>
+            {% endfor %}
+
+
+
+
+        </div>
+
+	</div>
+    <!--FINISH ABOUT/MEMBERS-->
+
+
+
+</div>
+
+</body>
+</html>
+
+
