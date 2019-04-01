@@ -29,6 +29,18 @@ body {
 
 }
 
+.my_meetings{
+
+    padding-top:0.1%;
+    padding-bottom:5%;
+    padding-left:5%;
+
+}
+
+.card-deck .cw-30 {
+    flex: 1 0 55%;
+    max-width: 55%;
+}
 
 .m_img {
     display: block;

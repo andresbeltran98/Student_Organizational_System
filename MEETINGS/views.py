@@ -16,11 +16,13 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
 )
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from CALENDAR.utils import Calendar, get_date, prev_month, next_month
+from django.utils.safestring import mark_safe
 
 
 def create_membership(user, meeting, organizer):
@@ -55,6 +57,23 @@ class MeetingCreateView(LoginRequiredMixin, CreateView):
 
 class MeetingListView(LoginRequiredMixin, ListView):
     template_name = 'MEETINGS/meeting_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # use today's date for the calendar
+        d = get_date(self.request.GET.get('month', None))
+
+        # Instantiate our calendar class with today's year and date
+        cal = Calendar(d.year, d.month)
+
+        # Call the formatmonth method, which returns our calendar as a table
+        events = self.request.user.user_meetings.filter(date_start__year=d.year, date_start__month=d.month)
+        html_cal = cal.formatmonth(events, withyear=True)
+
+        context['prev_month'] = prev_month(d)
+        context['next_month'] = next_month(d)
+        context['calendar'] = mark_safe(html_cal)
+        return context
 
     def get_queryset(self):
         return self.request.user.user_meetings.all()
@@ -113,13 +132,10 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
             post_name = data['name']
 
             if post_name == 'share_form':
-                # share_form = ShareForm(request.POST)
                 share_form = ShareForm(data=data['form'])
                 if share_form.is_valid():
                     recipients = share_form.clean()['emails']
-                    # messages.success(request, "The invitations were sent successfully!")
                     send_invitations(recipients, request.user.username, meeting.title, meeting.get_absolute_url())
-                    # return redirect(meeting.get_absolute_url())
                     return JsonResponse({'success': True})
                 else:
                     return JsonResponse({'error': share_form.errors})
@@ -129,12 +145,6 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
                     return JsonResponse({'select': True})
                 else:
                     return JsonResponse({'select': False})
-
-
-
-
-
-
 
 
 class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

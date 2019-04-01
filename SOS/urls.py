@@ -26,8 +26,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='USERS/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='USERS/logout.html'), name='logout'),
     path('profile/<int:pk>/', user_views.ProfileDetailView.as_view(), name='profile'),
-    path('', include('MEETINGS.urls')),
-    path('calendar/', include('CALENDAR.urls'))
+    path('', include('MEETINGS.urls'))
 ]
 
 if settings.DEBUG:

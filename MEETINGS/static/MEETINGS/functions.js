@@ -24,8 +24,6 @@ $(document).ready(function(){
     }
 
     var $shareForm = $('.share_ajax')
-    var $leaveForm = $('.leave_ajax')
-
     $shareForm.submit(function(event){
         event.preventDefault()
         data = {
@@ -64,6 +62,7 @@ $(document).ready(function(){
         })
     })
 
+    var $leaveForm = $('.leave_ajax')
     $leaveForm.submit(function(event){
         event.preventDefault()
         data = {
@@ -108,6 +107,42 @@ $(document).ready(function(){
                 console.log(xhr, error, textStatus);
             }
         })
+    })
+
+    $(document).on("click", "#prev_btn", function() {
+
+        event.preventDefault()
+        $prevUrl = $(this).attr('href')
+
+        $.ajax({
+
+            url: $prevUrl,
+
+            success: function (data) {
+
+                var $result = $('<div />').append(data).find('#cal_row').html();
+                $("#cal_row").html($result);
+            }
+
+         })
+    })
+
+    $(document).on("click", "#next_btn", function() {
+
+        event.preventDefault()
+        $prevUrl = $(this).attr('href')
+
+        $.ajax({
+
+            url: $prevUrl,
+
+            success: function (data) {
+
+                var $result = $('<div />').append(data).find('#cal_row').html();
+                $("#cal_row").html($result);
+            }
+
+         })
     })
 
 })
