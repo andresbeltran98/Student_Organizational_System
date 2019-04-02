@@ -3,10 +3,10 @@
 {% block content %}
 <div class="content-section">
       <div class="media">
-        <img src="{{ user.profile.image.url }}" height="128" width="128" align="middle" style="margin:20px 20px">
+        <img src="{{ object.image.url }}" height="128" width="128" align="middle" style="margin:20px 20px">
         <div class="media-body">
-          <h2 class="account-heading">{{ user.username }}</h2>
-          <p class="text-secondary">{{ user.email }}</p>
+          <h2 class="account-heading">{{ object.user.username }}</h2>
+          <p class="text-secondary">{{ object.user.email }}</p>
         </div>
       </div>
       <!-- FORM HERE -->

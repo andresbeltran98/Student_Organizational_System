@@ -16,12 +16,17 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
 )
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from CALENDAR.utils import Calendar, get_date, prev_month, next_month
+from django.utils.safestring import mark_safe
 
 
-def create_membership(request, meeting, organizer):
-    m1 = Membership(person=request.user, group=meeting,
+def create_membership(user, meeting, organizer):
+    m1 = Membership(person=user, group=meeting,
                     date_joined=datetime.datetime.now().date(), is_organizer=organizer)
     m1.save()
 
@@ -46,12 +51,29 @@ class MeetingCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.save()
-        create_membership(self.request, self.object, True)
+        create_membership(self.request.user, self.object, True)
         return super().form_valid(form)
 
 
 class MeetingListView(LoginRequiredMixin, ListView):
     template_name = 'MEETINGS/meeting_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # use today's date for the calendar
+        d = get_date(self.request.GET.get('month', None))
+
+        # Instantiate our calendar class with today's year and date
+        cal = Calendar(d.year, d.month)
+
+        # Call the formatmonth method, which returns our calendar as a table
+        events = self.request.user.user_meetings.filter(date_start__year=d.year, date_start__month=d.month)
+        html_cal = cal.formatmonth(events, withyear=True)
+
+        context['prev_month'] = prev_month(d)
+        context['next_month'] = next_month(d)
+        context['calendar'] = mark_safe(html_cal)
+        return context
 
     def get_queryset(self):
         return self.request.user.user_meetings.all()
@@ -61,8 +83,6 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
     model = Meeting
     template_name = 'MEETINGS/meeting_detail.html'
     form_class = forms.Form
-
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,6 +97,9 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
         except ObjectDoesNotExist:
             print("Member not in meeting")
 
+        share_form = ShareForm()
+
+        context['form'] = share_form
         context['is_member'] = is_member
         context['is_organizer'] = is_organizer
 
@@ -84,41 +107,49 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         meeting = self.get_object()
+
         if request.POST.get('join_meeting'):
-            create_membership(request, meeting, False)
+            create_membership(request.user, meeting, False)
             return redirect(meeting.get_absolute_url())
 
-        if request.POST.get('leave_meeting'):
+        if request.POST.get('leave_meeting_mem'):
             membership = Membership.objects.get(group=meeting, person=request.user)
             membership.delete()
             return redirect(meeting.get_absolute_url())
 
-        if request.POST.get('share_meeting'):
-            share_form = ShareForm()
-            context = {
-                'form' : share_form
-            }
-            return render(request, 'MEETINGS/share_meeting.html', context)
+        if request.POST.get('leave_meeting_org'):
+            new_organizer_username = request.POST['select_org']
+            new_org = User.objects.get(username=new_organizer_username)
+            new_membership = Membership.objects.get(group=meeting, person=new_org)
+            new_membership.is_organizer = True
+            new_membership.save()
+            old_membership = Membership.objects.get(group=meeting, person=request.user)
+            old_membership.delete()
+            return redirect(meeting.get_absolute_url())
 
-        if request.POST.get('send_invitations'):
-            share_form = ShareForm(request.POST)
-            if share_form.is_valid():
-                recipients = share_form.clean()['emails']
-                messages.success(request, "The invitations were sent successfully!")
-                send_invitations(recipients, request.user.username, meeting.title, meeting.get_absolute_url())
-                return redirect(meeting.get_absolute_url())
-            else:
-                share_form = ShareForm()
-                context = {
-                    'form': share_form
-                }
-                messages.error(request, "Invalid email(s)")
-                return render(request, 'MEETINGS/share_meeting.html', context)
+        if request.is_ajax():
+            data = json.load(request)
+            post_name = data['name']
+
+            if post_name == 'share_form':
+                share_form = ShareForm(data=data['form'])
+                if share_form.is_valid():
+                    recipients = share_form.clean()['emails']
+                    send_invitations(recipients, request.user.username, meeting.title, meeting.get_absolute_url())
+                    return JsonResponse({'success': True})
+                else:
+                    return JsonResponse({'error': share_form.errors})
+
+            if post_name == 'leave_form':
+                if meeting.members.count() > 1:
+                    return JsonResponse({'select': True})
+                else:
+                    return JsonResponse({'select': False})
 
 
 class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Meeting
-    fields = ['title', 'university', 'course', 'date', 'location', 'description']
+    fields = ['title', 'university', 'course', 'date_start', 'date_end', 'location', 'description']
 
     def form_valid(self, form):
         form.save()

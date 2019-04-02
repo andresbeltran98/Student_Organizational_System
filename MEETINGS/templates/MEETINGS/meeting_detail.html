@@ -1,56 +1,150 @@
-{% extends "USERS/base.html" %}
+{% extends "MEETINGS/boot_base.html" %}
+{% load static %}
 {% block content %}
 
-<!--MESSAGES-->
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+	<div class="row">
+        <!-- PICTURE COLUMN-->
+		<div class="col-md-6">
+            <img class="m_img rounded" src="{% static 'MEETINGS/meeting_default.jpg' %}"/>
+		</div>
 
-<h1>{{ object.title }}</h1>
-
-<!--IF ORGANIZER: UPDATE/DELETE -->
-{% if is_organizer == True %}
-<a class="btn" href="{% url 'meeting-update' object.id %}">Update</a>
-<a class="btn" href="{% url 'meeting-delete' object.id %}">Delete Meeting</a>
-{% endif %}
-
-<p>University: {{ object.university }}</p>
-<p>Course: {{ object.course }}</p>
-<p>Date: {{ object.date }}</p>
-<p>Location: {{ object.location }}</p>
-<p>Description: {{ object.description }}</p>
-
-<!--DISPLAY MEMBERS -->
-<p><h3>Members:</h3><p>
-{% for member in object.members.all %}
-    <p>{{ member.username }}</p>
-{% endfor %}
+        <!--INFO COLUMN-->
+		<div class="info col-md-6">
+            <h2 class="text-info">{{ object.title }}</h2>
+            <p><h4>@ {{ object.university }}</h4></p>
+            <p>Course: {{ object.course }}</p>
+            <p>From: {{ object.date_start | date:"F d, Y, P" }}</p>
+            <p>To: {{ object.date_end }}</p>
+            <p>Location: {{ object.location }}</p>
 
 
-<!-- INVITE PEOPLE -->
-<form method="POST">
-    {% csrf_token %}
-    <p><input type="Submit" value="Share Meeting!" name="share_meeting"/></p>
-</form>
+            <!--SHARE MEETING MODAL -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#shareModal"
+                    data-whatever="@mdo">Share Meeting</button>
 
-<!--JOIN/LEAVE BUTTONS -->
-{% if is_member == False %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="Submit" value="Join Meeting" name="join_meeting"/>
-</form>
+            <div class="share_modal modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Share Meeting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
 
-{% else %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="Submit" value="Leave Meeting" name="leave_meeting"/>
-</form>
+                      <p><h6>Please enter email addresses (separated by commas)</h6></p>
+                        <form class="share_ajax" method="POST" name="share_form" action="{% url 'meeting-detail' object.id %}">
+                            <div id="results"></div>
+                            {% csrf_token %}
+                            {{ form }}
+                            <input class="btn btn-primary btn-rounded my-3" name="send_invitations" type="submit" value="Share!"></p>
+                        </form>
 
-{% endif %}
+                  </div>
+
+                  <!--FOOTER <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+
+
+
+        </div>
+
+	</div>
+    <!--FINISH HEADER-->
+
+
+
+    <!--ABOUT/MEMBERS-->
+    <div class="description row">
+        <!-- ABOUT-->
+		<div class="about col-md-6">
+            <h2 class="text-info">Description</h2>
+            <br class="p_med">{{ object.description }}</br>
+		</div>
+
+        <!--MEMBERS-->
+		<div class="info col-md-6">
+            <h2 class="text-info">Members</h2>
+
+            <!--JOIN/LEAVE BUTTONS -->
+            <!-- ORGANIZERS -->
+            {% if is_organizer == True %}
+            <br class="p_med"><h5>You are the organizer!</h5>
+            <div class="btn-group" role="group">
+				<a class="btn btn-secondary" href="{% url 'meeting-update' object.id %}" type="button">Update Details</a>
+                <a class="btn btn-secondary" href="{% url 'meeting-delete' object.id %}" type="button">Cancel Meeting</a>
+            </div>
+
+            <form name="leave_form" class="leave_ajax" method="POST">
+                {% csrf_token %}
+                <input class="btn btn-danger btn-sm mt-1 mb-1" type="Submit" value="Leave meeting"/>
+            </form>
+
+            <!-- If only one member, show error -->
+            <div id="leave_error" class="alert alert-danger alert-dismissible" style="display: none;">
+                <button id="close_alert" type="button" class="close" aria-label="Close">&times;</button>
+                You are the only member! Delete the meeting if you want to leave
+            </div>
+
+            <!-- If not, choose organizer -->
+            <form id="select_form" method="POST" style="display: none;">
+                <div class="alert alert-danger alert-dismissible">
+                    <button id="close_select_org" type="button" class="close" aria-label="Close">&times;</button>
+                    <h6>Assign a new organizer:</h6>
+                    {% csrf_token %}
+                    <select name="select_org" class="selectpicker" data-live-search="true">
+                        {% for member in object.members.all %}
+                            {% if member != user%}
+                                <option>{{ member.username }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input name="leave_meeting_org" class="btn btn-secondary btn-sm mt-1 mb-1" type="Submit" value="Assign and leave meeting"/>
+                </div>
+            </form>
+
+
+            {% elif is_member == False %}
+            <form method="POST">
+                {% csrf_token %}
+                <input class="btn btn-primary" type="Submit" value="Join Meeting" name="join_meeting"/>
+            </form>
+
+            {% else %}
+            <h5>You are a member!</h5>
+            <form method="POST">
+                {% csrf_token %}
+                <input name="leave_meeting_mem" class="btn btn-danger btn-sm mt-1 mb-1" type="Submit" value="Leave Meeting"/>
+            </form>
+            {% endif %}
+
+            <!--LIST OF ATTENDEES-->
+            <br class="p_med">
+
+            {% for member in object.members.all %}
+            <div class="member_profile col-md-9">
+                <img class="rounded-circle article-img" src="{% static 'MEETINGS/user_default.png' %}">
+                <a class="mr-2" href="{% url 'profile' member.id %}">{{ member.username }}</a>
+                <small class="text-muted">Joined on {{ member.date_joined | date:"F d, Y" }}</small>
+
+            </div>
+            {% endfor %}
+
+
+
+
+        </div>
+
+	</div>
+    <!--FINISH ABOUT/MEMBERS-->
 
 
 {% endblock content %}
+
+

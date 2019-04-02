@@ -1,11 +1,57 @@
-{% extends "USERS/base.html" %}
+{% extends "MEETINGS/boot_base.html" %}
+{% load static %}
 {% block content %}
 
-    <h1>My Meetings</h1>
+<!-- MY MEETINGS -->
+<div class="my_meetings row">
+    <div class="list col-md-7">
 
-   {% for meeting in object_list %}
-    <p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
-    {% endfor %}
+        <h1 class="text-info">My Study Sessions</h1>
+
+
+        <!-- CARD DECK -->
+        <br class="p_med">
+        <div class="card-deck flex-nowrap">
+
+            {% for meeting in object_list %}
+            <div class="card cw-30">
+                <img class="card-img-top" src="{% static 'MEETINGS/meeting_default.jpg' %}">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ meeting.title }}</h5>
+                    <p class="card-text">{{ meeting.description }}</p>
+                    <a href="{% url 'meeting-detail' meeting.id %}" class="btn btn-primary">Go to Study Session!</a>
+                </div>
+
+                <!-- <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                </div> -->
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- MY CALENDAR -->
+<div id="cal_row" class="my_meetings row">
+    <div class="list col-md-8">
+        <h1 class="text-info">My Calendar</h1>
+        <div class="clearfix">
+	        <button id="prev_btn" class="btn btn-secondary btn-sm mt-1 mb-1 left"
+               href="?{{ prev_month }}"> Previous Month </button>
+	        <a id="next_btn" class="btn btn-secondary btn-sm mt-1 mb-1 right"
+               href="?{{ next_month }}"> Next Month </a>
+        </div>
+
+        {{ calendar }}
+
+    </div>
+</div>
+
+
 
 
 {% endblock content %}

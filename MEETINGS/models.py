@@ -22,6 +22,12 @@ class Meeting(models.Model):
         url = reverse('meeting-detail', kwargs={'pk': self.pk})
         return f'<a href="{url}"> {self.title} </a>'
 
+    @property
+    def get_time_format(self):
+        return self.date_start.strftime('%H:%M')
+
+
+
     def get_absolute_url(self):
         # returns the path as a string
         return reverse('meeting-detail', kwargs={'pk': self.pk})
