@@ -12,7 +12,11 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            user.refresh_from_db()
+            user.profile.university = form.cleaned_data.get('university')
+            user.profile.major = form.cleaned_data.get('major')
+            user.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
             return redirect('login')
@@ -29,11 +33,3 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-
-"""
-@login_required
-def profile(request):
-    return render(request, 'USERS/profile.html')
-"""
-
-

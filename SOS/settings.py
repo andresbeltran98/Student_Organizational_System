@@ -135,6 +135,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'meetings-list'
 LOGIN_URL = 'login'
 
+AUTH_PROFILE_MODULE = 'USERS.Profile'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
