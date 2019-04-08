@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import DetailView
+from django.views.generic import DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
+from django.http import HttpResponse
 
 
 def register(request):
@@ -32,4 +33,21 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        u_form = UserUpdateForm(instance=self.request.user)
+        p_form = ProfileUpdateForm(instance=self.request.user.profile)
+        context['u_form'] = u_form
+        context['p_form'] = p_form
         return context
+
+    def post(self, request, *args, **kwargs):
+        u_form = UserUpdateForm(request.POST, instance=self.request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=self.request.user.profile)
+
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect(request.user.profile.get_absolute_url())
+
