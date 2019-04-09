@@ -1,3 +1,5 @@
+/* Handles AJAX calls  */
+
 $(document).ready(function(){
 
     function getCookie(name) {

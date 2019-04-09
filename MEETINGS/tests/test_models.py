@@ -2,21 +2,25 @@ from django.test import TestCase
 from ..models import Meeting, Membership
 from django.contrib.auth.models import User
 import datetime
+from django.utils import timezone
 
 
 class MeetingTestModel(TestCase):
 
     def setUp(self):
         self.title = 'MyMeeting'
+        self.university = 'CWRU'
         self.course = 'EECS 383'
-        self.date_now = datetime.datetime.strptime('2019-3-19', "%Y-%m-%d").date()
+        self.date_now = timezone.now()
         self.location = 'Sears'
         self.description = 'Demo Session'
 
         self.meeting1 = Meeting.objects.create(
             title=self.title,
+            university=self.university,
             course=self.course,
-            date=self.date_now,
+            date_start=self.date_now,
+            date_end=self.date_now,
             location=self.location,
             description=self.description
         )
@@ -37,8 +41,10 @@ class MeetingTestModel(TestCase):
 
     def test_get_parameters(self):
         self.assertEquals(self.meeting1.title, self.title)
+        self.assertEquals(self.meeting1.university, self.university)
         self.assertEquals(self.meeting1.course, self.course)
-        self.assertEquals(self.meeting1.date, self.date_now)
+        self.assertEquals(self.meeting1.date_start, self.date_now)
+        self.assertEquals(self.meeting1.date_end, self.date_now)
         self.assertEquals(self.meeting1.location, self.location)
         self.assertEquals(self.meeting1.description, self.description)
 
