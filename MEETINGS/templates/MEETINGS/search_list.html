@@ -1,14 +1,39 @@
-{% extends "USERS/base.html" %}
+{% extends "MEETINGS/boot_base.html" %}
+{% load static %}
 {% block content %}
 
-    <form method="GET">
-        <input name="myquery" placeholder="Search meeting...">
-        <button class="btn btn-success" type="submit">Search</button>
-    </form>
+<form method="GET">
+    <input name="myquery" placeholder="Search meeting...">
+    <button class="btn btn-success" type="submit">Search</button>
+</form>
 
-{% for meeting in object_list %}
-<p><a href="{% url 'meeting-detail' meeting.id %}">{{ meeting.title }}</a></p>
-{% endfor %}
+<div class="my_meetings row">
+    <div class="list col-md-7">
+        <!-- CARD DECK -->
+        <br class="p_med">
+        <div class="card-deck flex-nowrap">
+
+            {% for meeting in object_list %}
+            <div class="card cw-20">
+                <img class="card-img-top" src="{% static 'MEETINGS/meeting_default.jpg' %}">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ meeting.title }}</h5>
+                    <p class="card-text">{{ meeting.description }}</p>
+                    <a href="{% url 'meeting-detail' meeting.id %}" class="btn btn-primary">Go to Study Session!</a>
+                </div>
+
+                <!-- <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                </div> -->
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+
 
 
 {% endblock content %}
