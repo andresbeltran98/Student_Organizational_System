@@ -26,6 +26,12 @@ And lastly to handle the images, you will need Pillow
 $ pip install Pillow
 ```
 
+If you intend to check testing and coverage, make sure to install coverage as well
+
+```
+$ pip install coverage
+```
+
 ## Documentation
 
 See the Wiki files in the repository for a more in depth look at the roadmap of the project and the most recent documentation. This includes our Software Requirements Specification, Testing Documents, and our Design Document.
