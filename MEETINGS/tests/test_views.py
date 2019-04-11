@@ -6,7 +6,7 @@ from ..models import *
 
 class TestViews(TestCase):
     """
-    Tests the Meetings module views
+    These test cases check the Meetings module views
     """
 
     def setUp(self):

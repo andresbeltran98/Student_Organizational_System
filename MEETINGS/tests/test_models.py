@@ -6,6 +6,9 @@ from django.utils import timezone
 
 
 class MeetingTestModel(TestCase):
+    """
+    These test cases check the creation of new Meeting and Membership instances
+    """
 
     def setUp(self):
         self.title = 'MyMeeting'

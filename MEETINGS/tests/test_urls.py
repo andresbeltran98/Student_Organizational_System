@@ -5,6 +5,9 @@ from ..views import (MeetingListView, MeetingDetailView, MeetingCreateView, Meet
 
 
 class TestUrls(SimpleTestCase):
+    """
+    These test cases check the urls of the Meetings module
+    """
 
     def test_meeting_list_url(self):
         url = reverse('meetings-list')
