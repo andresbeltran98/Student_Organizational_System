@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from .models import Profile
 
 
+# Signals that a new profile is to be created every time a new user is
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -11,6 +12,7 @@ def create_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 
-# @receiver(post_save, sender=User)
-# def save_profile(sender, instance, **kwargs):
-    # instance.profile.save()
+# Signals that an update to a user also subsequently updates their profile
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
