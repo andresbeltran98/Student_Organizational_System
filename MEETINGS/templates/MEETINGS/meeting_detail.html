@@ -129,8 +129,8 @@
 
             {% for member in object.members.all %}
             <div class="member_profile col-md-9">
-                <img class="rounded-circle article-img" src={{ member.profile.image.url }}>
-                <a class="mr-2" href="{% url 'profile' member.id %}">{{ member.username }}</a>
+                <img class="rounded-circle prof-img" src={{ member.profile.image.url }}>
+                <a class="mr-2" href="{% url 'profile' member.id %}">{{ member.first_name }} {{ member.last_name }}</a>
                 <small class="text-muted">Joined on {{ member.date_joined | date:"F d, Y" }}</small>
 
             </div>

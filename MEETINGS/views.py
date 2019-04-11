@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django import forms
 from django.db.models import Q
 from .forms.share_form import ShareForm
+from .forms.create_meeting_form import CreateMeetingForm
 from django.views.generic import (
     ListView,
     DetailView,
@@ -29,10 +30,10 @@ class MeetingCreateView(LoginRequiredMixin, CreateView):
     """ This class loads the form used for creating a new Meeting instance
     Attributes:
         model = the Meeting database
-        fields = the fields to be included in the form
+        form_class = The form used for creating a meeting
     """
     model = Meeting
-    fields = ['title', 'university', 'course', 'date_start', 'date_end', 'location', 'description']
+    form_class = CreateMeetingForm
 
     def form_valid(self, form):
         """ The form is valid. Saves the instance on the database and sets the user who created the meeting
