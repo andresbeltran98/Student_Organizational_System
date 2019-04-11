@@ -3,8 +3,8 @@
 {% block content %}
 
 <!-- MY MEETINGS -->
-<div class="my_meetings row">
-    <div class="list col-md-7">
+<div class="deck_row row">
+    <div class="list col-md-12">
 
         <h1 class="text-info">My Study Sessions</h1>
 
@@ -14,7 +14,7 @@
         <div class="card-deck flex-nowrap">
 
             {% for meeting in object_list %}
-            <div class="card cw-30">
+            <div class="card">
                 <img class="card-img-top" src="{% static 'MEETINGS/meeting_default.jpg' %}">
 
                 <div class="card-body">

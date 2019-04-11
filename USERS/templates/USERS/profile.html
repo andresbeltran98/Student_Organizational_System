@@ -20,6 +20,8 @@
           <p>{{ object.major }}</p>
       </div>
     </div>
+
+    {% if user.username == object.user.username %}
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -31,5 +33,6 @@
                  <button class ="btn btn-outline-info" type="submit">Update Info</button>
             </div>
         </form>
+    {% endif %}
 </div>
 {% endblock content %}
