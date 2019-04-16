@@ -1,14 +1,42 @@
-{% extends "USERS/base.html" %}
+{% extends "MEETINGS/boot_base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
 
-<h1>Start a Study Session!</h1>
 
-    <form method="POST">
-    {% csrf_token %} <!-- Security feature -->
-    {{ form|crispy }}
-        <input type="Submit" value="Save" />
-    </form>
+
+<div class="my_meeetings row">
+    <div class="create_meeting col-md-6">
+        <h1 class="text-info">Start a new Study Session!</h1>
+        <form method="POST">
+            {% csrf_token %} <!-- Security feature -->
+            {{ form|crispy }}
+            <input class="btn btn-primary btn-rounded my-3" type="Submit" value="Create Study Session!" />
+
+            <script>
+                $(function () {
+                    $("#id_date_start").datetimepicker({
+                    format: 'm/d/Y H:i',
+                    });
+                });
+
+                $(function () {
+                    $("#id_date_end").datetimepicker({
+                    format: 'm/d/Y H:i',
+                    });
+                });
+            </script>
+
+        </form>
+
+    </div>
+
+    <div class="col-md-6">
+        <img class="m_img rounded" src="{% static 'MEETINGS/startMeet.jpg' %}"/>
+    </div>
+</div>
+
+
 
 
 {% endblock content %}

@@ -37,9 +37,47 @@ body {
 
 }
 
+.deck_row{
+    padding-top:0.1%;
+    padding-bottom:5%;
+    padding-left:5%;
+    padding-right: 5%
+
+}
+
+.search{
+
+    padding-top:0.1%;
+    padding-bottom:2%;
+    padding-left:5%;
+
+}
+
+.create_meeting{
+
+    padding-top:0.1%;
+    padding-bottom:2%;
+    padding-left:5%;
+
+}
+
+.prof-img {
+  height: 80px;
+  width: 80px;
+  margin-right: 1%;
+  margin-bottom: 1%;
+}
+
+.card-deck {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
+    grid-gap: 2.0rem;
+}
+
 .card-deck .cw-30 {
-    flex: 1 0 55%;
-    max-width: 55%;
+    flex: 1 0 15%;
+    max-width: 40%;
+
 }
 
 .card-deck .cw-20 {
@@ -87,51 +125,4 @@ ul {
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
-}
-
-.article-title {
-  color: #444444;
-}
-
-a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
-}
-
-.article-content {
-  white-space: pre-line;
-}
-
-.article-img {
-  height: 65px;
-  width: 65px;
-  margin-right: 16px;
-}
-
-.article-metadata {
-  padding-bottom: 1px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
-}
-
-.article-metadata a:hover {
-  color: #333;
-  text-decoration: none;
-}
-
-.article-svg {
-  width: 25px;
-  height: 25px;
-  vertical-align: middle;
-}
-
-.account-img {
-  height: 125px;
-  width: 125px;
-  margin-right: 20px;
-  margin-bottom: 16px;
-}
-
-.account-heading {
-  font-size: 2.5rem;
 }
