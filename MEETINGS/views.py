@@ -18,12 +18,14 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    TemplateView
 )
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from CALENDAR.utils import Calendar, get_date, prev_month, next_month
 from django.utils.safestring import mark_safe
+import django_filters
 
 
 class MeetingCreateView(LoginRequiredMixin, CreateView):
@@ -226,15 +228,52 @@ class SearchListView(LoginRequiredMixin, ListView):
     """
     template_name = 'MEETINGS/search_list.html'
 
+
     def get_queryset(self):
         """ Retrieves the meeting objects depending on the user query
         :return: A list of meetings that match the user query
         """
-        query = self.request.GET.get('myquery')
-        results = None
-        if query is not None:
-            results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
-        return results
+
+        if self.request.is_ajax():
+            query = self.request.GET['search_text']
+            results = None
+            if query is not None:
+                results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+            return results
+
+        else:
+            query = self.request.GET
+            meeting_filter = MeetingSearchFilter(query, queryset=Meeting.objects.all())
+            # results = None
+            # if query is not None:
+                # results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+            # return results
+            return meeting_filter.qs
+
+    def get_context_data(self, **kwargs):
+        """ Passes the current context(objects) to the template
+        :param kwargs: optional arguments
+        :return: Dictionary containing keys used by the template
+        """
+        context = super().get_context_data(**kwargs)
+        context['filter'] = MeetingSearchFilter()
+        return context
+
+
+class MeetingSearchFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(lookup_expr='icontains')
+    university = django_filters.CharFilter(lookup_expr='icontains')
+    course = django_filters.CharFilter(lookup_expr='icontains')
+    location = django_filters.CharFilter(lookup_expr='icontains')
+    date_start = django_filters.DateFilter(lookup_expr='date')
+
+    def __init__(self, *args, **kwargs):
+        super(MeetingSearchFilter, self).__init__(*args, **kwargs)
+        self.filters['date_start'].label = "Date"
+
+    class Meta:
+        model = Meeting
+        fields = ['title', 'university', 'course', 'date_start', 'location']
 
 
 def create_membership(user, meeting, is_organizer):

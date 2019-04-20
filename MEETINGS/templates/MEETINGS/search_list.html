@@ -1,20 +1,69 @@
 {% extends "MEETINGS/boot_base.html" %}
+{% load widget_tweaks %}
 {% load static %}
+
 {% block content %}
 
 <div class="search row">
-    <div class="col-md-12">
-        <form method="GET">
-            <input name="myquery" placeholder="Search meeting...">
-            <button class="btn btn-success" type="submit">Search</button>
-        </form>
-    </div>
+    <div class="col-md-10">
 
+        <form id="ajax_search_form" method="GET">
+            <input class="form-control col-sm-5"
+                   type="text" id="search_ajax" name="myquery" placeholder="Search meeting...">
+        </form>
+
+        <br><button id="search_filters_btn" class="btn btn-default">Add Filters</button>
+
+        <form id="filter_options" method="GET" style="display: none;">
+            <div class="well" style="padding-top:1.2%;">
+                <div class="row" style="padding-left:5%;">
+
+                    <div class="form-group col-sm-4 col-md-4">
+                        {{ filter.form.title.label_tag }}
+                        {% render_field filter.form.title class="form-control" %}
+                    </div>
+
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.university.label_tag }}
+                        {% render_field filter.form.university class="form-control" %}
+                    </div>
+
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.course.label_tag }}
+                        {% render_field filter.form.course class="form-control" %}
+                    </div>
+
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.date_start.label_tag }}
+                        {% render_field filter.form.date_start class="form-control" %}
+                    </div>
+
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ filter.form.location.label_tag }}
+                        {% render_field filter.form.location class="form-control" %}
+                    </div>
+                </div>
+                <input class="btn btn-success" type="submit" name="myquery" style="margin-left:5%;">
+            </div>
+
+            <script>
+                $(function () {
+                    $("#id_date_start").datetimepicker({
+                    format: 'm/d/Y',
+                    });
+                });
+            </script>
+        </form>
+
+
+    </div>
 </div>
 
 
 <div class="search row">
-    <div class="list col-md-12">
+    <div id="search_results" class="list col-md-12">
+
+        {% if object_list.count > 0 %}
         <!-- CARD DECK -->
         <br class="p_med">
         <div class="card-deck flex-nowrap">
@@ -34,6 +83,11 @@
                 </div> -->
             </div>
             {% endfor %}
+
+            {% else %}
+            <p>No results</p>
+
+            {% endif %}
 
         </div>
     </div>

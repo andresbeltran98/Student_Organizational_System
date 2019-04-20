@@ -25,6 +25,7 @@ $(document).ready(function(){
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
+    //DETAIL
     var $shareForm = $('.share_ajax')
     $shareForm.submit(function(event){
         event.preventDefault()
@@ -111,6 +112,55 @@ $(document).ready(function(){
         })
     })
 
+    
+    //SEARCH
+    $(document).on("keyup", "#search_ajax", function() {
+
+        $.ajax({
+
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            method: "GET",
+            data: {
+                'search_text' : $('#search_ajax').val()
+            },
+
+
+            success: function(data, textStatus, jqHXR) {
+
+                var $result = $('<div />').append(data).find('#search_results').html();
+                $("#search_results").html($result);
+
+            },
+
+            error: function(xhr, textStatus, error) {
+                console.log(xhr, error, textStatus);
+            }
+
+        });
+
+    });
+
+    $(document).on("click", "#search_filters_btn", function() {
+
+        var x = document.getElementById("filter_options");
+
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            $("#search_filters_btn").text("Hide");
+        } else {
+            x.style.display = "none";
+            $("#search_filters_btn").text("Add Filters");
+        }
+
+    });
+    
+
+    //CALENDAR 
     $(document).on("click", "#prev_btn", function() {
 
         event.preventDefault()
@@ -148,3 +198,4 @@ $(document).ready(function(){
     })
 
 })
+

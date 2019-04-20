@@ -1,8 +1,13 @@
+{% load static %}
 <!-- NAV BAR-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
+
+                <a class="navbar-brand" href="{% url 'meetings-list' %}">
+                    <img src="{% static 'USERS/SOS.PNG' %}" width="60" height="35">
+                </a>
 
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'meetings-list' %}">Home <span class="sr-only">(current)</span></a>
