@@ -31,6 +31,17 @@ If you intend to check testing and coverage, make sure to install coverage as we
 ```
 $ pip install coverage
 ```
+## Basic Usage
+
+With the repository cloned, you can begin the website from your terminal via
+
+```
+$ python manage.py runsever
+```
+
+From there, navigate to localhost:8000 in your browser of choice. New users will have the option to create profiles while existing users can log in with existing credentials. From there, the program operate as one might expect. Users have the options to create their own study sessions as well as join existing ones. Users also have access to their own profile pages from the dropdown and can quickly and easily modify their information.
+
+When you're finished with the application, simply do a CTRL-C (Command + C on Mac) to close the local server.
 
 ## Documentation
 
