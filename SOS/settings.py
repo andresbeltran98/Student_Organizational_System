@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'USERS.apps.UsersConfig',
     'CALENDAR.apps.CalendarConfig',
     'crispy_forms',
+    'django_filters',
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
