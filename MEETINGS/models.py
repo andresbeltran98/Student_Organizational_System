@@ -37,11 +37,18 @@ class Meeting(models.Model):
         return f'<a href="{url}"> {self.title} </a>'
 
     @property
-    def get_time_format(self):
-        """ Returns datetime fields in hour:minute format
+    def get_start_time_format(self):
+        """ Returns the start time in hour:minute format
         :return: dates in hour:minute format
         """
         return self.date_start.strftime('%H:%M')
+
+    @property
+    def get_end_time_format(self):
+        """ Returns the end time in hour:minute format
+        :return: dates in hour:minute format
+        """
+        return self.date_end.strftime('%H:%M')
 
     def get_absolute_url(self):
         """ Returns the path/url of this meeting as a string

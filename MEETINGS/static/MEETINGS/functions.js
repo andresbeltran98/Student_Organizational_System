@@ -116,6 +116,11 @@ $(document).ready(function(){
     //SEARCH
     $(document).on("keyup", "#search_ajax", function() {
 
+        /*data = {
+                name : $('#search_ajax').name,
+                //search_text : $('#search_ajax').val()
+            };*/
+
         $.ajax({
 
             beforeSend: function(xhr, settings) {
@@ -125,8 +130,10 @@ $(document).ready(function(){
             },
 
             method: "GET",
+            url: $(this).attr('action'),
             data: {
-                'search_text' : $('#search_ajax').val()
+                name : 'myquery',
+                search_text : $('#search_ajax').val()
             },
 
 
@@ -158,6 +165,39 @@ $(document).ready(function(){
         }
 
     });
+
+    var $filterForm = $('.filter_options')
+    $filterForm.submit(function(event){
+        event.preventDefault()
+        
+        $.ajax({
+
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+
+            method: "GET",
+            data: {
+                name : $(this).attr('name'),
+                form : JSON.stringify($(this).serializeObject())
+
+            },
+
+
+            success: function(data) {
+
+                var $result = $('<div />').append(data).find('#search_results').html();
+                $("#search_results").html($result);
+
+            },
+
+            error: function(xhr, textStatus, error) {
+                console.log(xhr, error, textStatus);
+            }
+        })
+    })
     
 
     //CALENDAR 

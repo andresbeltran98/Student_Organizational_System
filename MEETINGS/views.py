@@ -26,6 +26,7 @@ import json
 from CALENDAR.utils import Calendar, get_date, prev_month, next_month
 from django.utils.safestring import mark_safe
 import django_filters
+from django.http import QueryDict
 
 
 class MeetingCreateView(LoginRequiredMixin, CreateView):
@@ -178,7 +179,8 @@ class MeetingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         fields = the fields to be updated
     """
     model = Meeting
-    fields = ['title', 'university', 'course', 'date_start', 'date_end', 'location', 'description']
+    template_name_suffix = '_update_form'
+    form_class = CreateMeetingForm
 
     def form_valid(self, form):
         """ The form is valid. Saves the changes on the database
@@ -228,27 +230,27 @@ class SearchListView(LoginRequiredMixin, ListView):
     """
     template_name = 'MEETINGS/search_list.html'
 
-
     def get_queryset(self):
         """ Retrieves the meeting objects depending on the user query
         :return: A list of meetings that match the user query
         """
-
         if self.request.is_ajax():
-            query = self.request.GET['search_text']
-            results = None
-            if query is not None:
-                results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
-            return results
 
-        else:
-            query = self.request.GET
-            meeting_filter = MeetingSearchFilter(query, queryset=Meeting.objects.all())
-            # results = None
-            # if query is not None:
-                # results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
-            # return results
-            return meeting_filter.qs
+            if self.request.GET['name'] == 'myquery':
+                query = self.request.GET['search_text']
+                results = None
+                if query is not None:
+                    results = Meeting.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+                return results
+            else:
+                data = json.loads(self.request.GET['form']) # type is dictionary
+                # Convert to QueryDic
+                qdict = QueryDict('', mutable=True)
+                qdict.update(data)
+                meeting_filter = MeetingSearchFilter(qdict, queryset=Meeting.objects.all())
+                return meeting_filter.qs
+
+        return Meeting.objects.all()
 
     def get_context_data(self, **kwargs):
         """ Passes the current context(objects) to the template
@@ -261,6 +263,8 @@ class SearchListView(LoginRequiredMixin, ListView):
 
 
 class MeetingSearchFilter(django_filters.FilterSet):
+    """ This class represents the filters for the Search Engine
+    """
     title = django_filters.CharFilter(lookup_expr='icontains')
     university = django_filters.CharFilter(lookup_expr='icontains')
     course = django_filters.CharFilter(lookup_expr='icontains')

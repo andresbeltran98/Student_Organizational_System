@@ -1,0 +1,42 @@
+{% extends "MEETINGS/boot_base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+<div class="my_meeetings row">
+    <div class="create_meeting col-md-6">
+        <h1 class="text-info">Update Meeting</h1>
+        <form method="POST">
+            {% csrf_token %} <!-- Security feature -->
+            {{ form | crispy }}
+            <input class="btn btn-primary btn-rounded my-3" type="Submit" value="Update" />
+            <a class="btn btn-secondary btn-rounded my-3" href="{% url 'meeting-detail' object.id %}">Cancel</a>
+            <script>
+                $(function () {
+                    $("#id_date_start").datetimepicker({
+                    format: 'm/d/Y H:i',
+                    });
+                });
+
+                $(function () {
+                    $("#id_date_end").datetimepicker({
+                    format: 'm/d/Y H:i',
+                    });
+                });
+            </script>
+
+        </form>
+
+    </div>
+
+    <div class="col-md-6">
+        <img class="m_img rounded" src="{% static 'MEETINGS/startMeet.jpg' %}"/>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

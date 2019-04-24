@@ -68,6 +68,18 @@ body {
   margin-bottom: 1%;
 }
 
+.navbar {
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+}
+
+
+.prof-img-navbar {
+  height: 35px;
+  width: 35px;
+}
+
 .card-deck {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
