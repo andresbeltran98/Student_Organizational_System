@@ -78,9 +78,23 @@
                     <a href="{% url 'meeting-detail' meeting.id %}" class="btn btn-primary">Go to Study Session!</a>
                 </div>
 
-                <!-- <div class="card-footer">
-                    <small class="text-muted">Last updated 3 mins ago</small>
-                </div> -->
+                <div class="card-footer">
+
+                    <small class="text-muted">
+                        {% if meeting.date_start.day == meeting.date_end.day %}
+                            {{ meeting.date_start | date:"F d, P" }} - {{ meeting.date_end | date:"P" }}
+                        {% else %}
+                            {{ meeting.date_start | date:"F d, P" }} - {{ meeting.date_end | date:"F d, P" }}
+                        {% endif %}
+
+                        <p>{{ meeting.members.count}}
+                            {% if meeting.members.count == 1 %}
+                            person going</small>
+                            {% else %}
+                            people going</small>
+                            {% endif %}
+
+                </div>
             </div>
             {% endfor %}
 

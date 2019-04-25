@@ -5,10 +5,20 @@ body {
 
 }
 
+.row {
+
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+}
+
 .description {
     padding-top:5%;
     padding-bottom:5%;
     padding-left:5%;
+}
+
+.members_div {
+    padding-left: 7%;
 }
 
 .about {

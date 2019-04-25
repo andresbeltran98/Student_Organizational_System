@@ -63,13 +63,13 @@
     <!--ABOUT/MEMBERS-->
     <div class="description row">
         <!-- ABOUT-->
-		<div class="about col-md-6">
+		<div class="about col-md-5">
             <h2 class="text-info">Description</h2>
             <br class="p_med">{{ object.description }}</br>
 		</div>
 
         <!--MEMBERS-->
-		<div class="info col-md-6">
+		<div class="members_div col-md-7">
             <h2 class="text-info">Members</h2>
 
             <!--JOIN/LEAVE BUTTONS -->
@@ -127,11 +127,11 @@
             <!--LIST OF ATTENDEES-->
             <br class="p_med">
 
-            {% for member in object.members.all %}
+            {% for memb in memberships %}
             <div class="member_profile col-md-9">
-                <img class="rounded-circle prof-img" src={{ member.profile.image.url }}>
-                <a class="mr-2" href="{% url 'profile' member.id %}">{{ member.first_name }} {{ member.last_name }}</a>
-                <small class="text-muted">Joined on {{ member.date_joined | date:"F d, Y" }}</small>
+                <img class="rounded-circle prof-img" src={{ memb.person.profile.image.url }}>
+                <a class="mr-2" href="{% url 'profile' memb.person.id %}">{{ memb.person.first_name }} {{ memb.person.last_name }}</a>
+                <small class="text-muted">Joined on {{ memb.date_joined | date:"F d, Y"  }}</small>
 
             </div>
             {% endfor %}

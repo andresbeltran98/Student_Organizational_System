@@ -115,6 +115,7 @@ class MeetingDetailView(LoginRequiredMixin, FormMixin, DetailView):
         context['form'] = share_form
         context['is_member'] = is_member
         context['is_organizer'] = is_organizer
+        context['memberships'] = Membership.objects.filter(group=self.get_object())
 
         return context
 
